@@ -80,15 +80,12 @@ src/
 1. Clone the repository:
 
    ```bash
-   git clone <repository-url>
-   cd <project-folder>
+   git clone (https://github.com/bhuwanpandey7/Stock-App.git)
+   cd realtime-stocks
 
    Install dependencies:
 npm install
 
 Run the development server:
- npm run start
+ npm run start (will run both backend and front end app)
  Open your browser at http://localhost:4200 to see the app.
-
-Run the backend server
- node server.js
