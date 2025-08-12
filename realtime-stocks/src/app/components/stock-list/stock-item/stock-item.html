@@ -1,0 +1,30 @@
+<div
+  class="stock-card"
+  [class.disabled]="!stock.enabled"
+  [class.positive]="stock.currentPrice >= stock.dailyLow && stock.enabled"
+  [class.negative]="stock.currentPrice < stock.dailyLow && stock.enabled"
+>
+  <div class="header">
+    <div class="symbol">{{ stock.symbol }}</div>
+    <label class="switch">
+      <input type="checkbox" [checked]="stock.enabled" (change)="onToggle()" />
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="body">
+    <div class="name">{{ stock.name }}</div>
+    <div class="price">{{ stock.currentPrice | currency }}</div>
+    <div class="daily m-1 p-1">
+      <div>High: {{ stock.dailyHigh | currency }}</div>
+      <div>Low: {{ stock.dailyLow | currency }}</div>
+    </div>
+
+    <ng-container *ngIf="!isMobile">
+      <div class="week m-1 p-1">
+        <div>52W High: {{ stock.week52High | currency }}</div>
+        <div>52W Low: {{ stock.week52Low | currency }}</div>
+      </div>
+    </ng-container>
+  </div>
+</div>

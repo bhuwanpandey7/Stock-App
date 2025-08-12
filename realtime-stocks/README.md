@@ -1,0 +1,94 @@
+# RealtimeStocks
+
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.5.
+
+# Angular Stock List Application
+
+This is a simple Angular application that displays a list of stocks with detailed price information. The app is structured using reusable components for better maintainability and scalability.
+
+---
+
+## Features
+
+- Fetches stock data from a service.
+- Displays stocks in a responsive grid.
+- Allows toggling stock enable/disable status.
+- Highlights stock cards based on price conditions (positive/negative).
+- Responsive layout adapts for mobile screens.
+- Modular design with reusable `StockItemComponent`.
+
+---
+
+## Project Structure
+
+src/
+│
+├── app/
+│ ├── stock-list/ # Parent component displaying the stock grid
+│ │ ├── stock-list.html
+│ │ ├── stock-list.scss
+│ │ └── stock-list.component.ts
+│ │
+│ ├── stock-item/ # Child reusable component for individual stock cards
+│ │ ├── stock-item.html
+│ │ ├── stock-item.scss
+│ │ └── stock-item.component.ts
+│ │
+│ ├── models/
+│ │ └── stock.interface.ts # Stock data interface
+│ │
+│ ├── services/
+│ │ └── stock-price.service.ts # providing stock data & toggle method (adapter service for data transformation)
+│ │
+│ └── app.ts / main.ts # Angular bootstrap setup (standalone)
+│
+├── assets/
+├── environments/
+├── styles.scss
+└── index.html
+
+
+---
+
+## Components
+
+### StockListComponent
+
+- Fetches the list of stocks from `StockPriceService`.
+- Tracks window size for responsive layout.
+- Passes each stock and device info to `StockItemComponent`.
+- Handles toggling stock enable state via service.
+
+### StockItemComponent
+
+- Receives a single `Stock` object and `isMobile` flag as inputs.
+- Displays stock details (symbol, name, current price, daily/52W high-low).
+- Applies styles conditionally for positive/negative/disabled states.
+- Emits toggle events back to parent component.
+
+---
+
+## Usage
+
+### Prerequisites
+
+- Node.js and npm installed
+- Angular CLI installed globally (`npm install -g @angular/cli`)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   cd <project-folder>
+
+   Install dependencies:
+npm install
+
+Run the development server:
+ npm run start
+ Open your browser at http://localhost:4200 to see the app.
+
+Run the backend server
+ node server.js
