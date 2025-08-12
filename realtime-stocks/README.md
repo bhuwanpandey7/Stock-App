@@ -4,13 +4,13 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 # Angular Stock List Application
 
-This is a simple Angular application that displays a list of stocks with detailed price information. The app is structured using reusable components for better maintainability and scalability.
+This is a Real time stock Angular application that displays a list of stocks with price information. The app is structured using reusable components for better maintainability and scalability.
 
 ---
 
 ## Features
 
-- Fetches stock data from a service.
+- Fetches stock data from a yahoo finance using web sockets.
 - Displays stocks in a responsive grid.
 - Allows toggling stock enable/disable status.
 - Highlights stock cards based on price conditions (positive/negative).
@@ -47,14 +47,13 @@ src/
 ├── styles.scss
 └── index.html
 
-
 ---
 
 ## Components
 
 ### StockListComponent
 
-- Fetches the list of stocks from `StockPriceService`.
+- Fetches the list of stocks from `StockPriceService` by mainting a connection to server using web socket.
 - Tracks window size for responsive layout.
 - Passes each stock and device info to `StockItemComponent`.
 - Handles toggling stock enable state via service.
@@ -79,13 +78,17 @@ src/
 
 1. Clone the repository:
 
-   ```bash
    git clone (https://github.com/bhuwanpandey7/Stock-App.git)
    cd realtime-stocks
 
    Install dependencies:
-npm install
+   navigate to src/backend and run install for server side dependencies
+   run npm install at root of project for client side dependencies
 
-Run the development server:
- npm run start (will run both backend and front end app)
+ npm run start (will run both backend and front end app concurrently)
+ -  "start": "npm-run-all --parallel backend frontend",
+ -  "backend": "node src/backend/server.js",
+ -  "frontend": "ng serve --proxy-config proxy.conf.json",
+
+Run the development server:  
  Open your browser at http://localhost:4200 to see the app.

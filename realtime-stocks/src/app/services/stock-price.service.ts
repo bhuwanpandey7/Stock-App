@@ -9,7 +9,7 @@ export class StockPriceService implements OnDestroy {
   private stocksSubject = new BehaviorSubject<Stock[]>([]);
   stocks$ = this.stocksSubject.asObservable();
 
-  private manualOff = new Set<string>(); // Track stocks toggled off
+  private manualOff = new Set<string>();
   private socket!: Socket;
 
   private connectionStatusSubject = new BehaviorSubject<boolean>(false);
@@ -28,9 +28,17 @@ export class StockPriceService implements OnDestroy {
 
     this.socket.on('stockUpdate', (response: any) => {
       const stocks = this.transformStocksRealTimeData(response);
-      const merged = stocks.map((stock) =>
-        this.manualOff.has(stock.name) ? { ...stock, enabled: false } : stock
-      );
+      const merged = stocks.map((stock) => {
+        if (this.manualOff.has(stock.name)) {
+          const last = this.stocksSubject.value.find(
+            (s) => s.name === stock.name
+          );
+          return last
+            ? { ...last, enabled: false }
+            : { ...stock, enabled: false };
+        }
+        return stock;
+      });
       this.stocksSubject.next(merged);
     });
 
@@ -39,14 +47,13 @@ export class StockPriceService implements OnDestroy {
     });
 
     this.socket.on('error', (err: any) => {
-      console.error('WebSocket error:', err);
       this.stocksSubject.next([]);
     });
   }
 
   private transformStocksRealTimeData(response: any): Stock[] {
     return (
-      response?.quoteResponse?.result?.map((item: any) => ({
+      (response?.quoteResponse?.result?.map((item: any) => ({
         symbol: item.symbol,
         name: item.shortName || item.longName || item.symbol,
         currentPrice: item.regularMarketPrice,
@@ -55,7 +62,7 @@ export class StockPriceService implements OnDestroy {
         week52High: item.fiftyTwoWeekHigh,
         week52Low: item.fiftyTwoWeekLow,
         enabled: true,
-      })) || []
+      })) as Stock[]) || []
     );
   }
 
@@ -66,6 +73,7 @@ export class StockPriceService implements OnDestroy {
     } else {
       this.manualOff.delete(name);
     }
+    this.socket.emit('toggleStock', { name, enabled });
     const updated = this.stocksSubject.value.map((stock) =>
       stock.name === name ? { ...stock, enabled } : stock
     );
