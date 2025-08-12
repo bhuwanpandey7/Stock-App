@@ -1,30 +1,40 @@
 <div
   class="stock-card"
   [class.disabled]="!stock.enabled"
-  [class.positive]="stock.currentPrice >= stock.dailyLow && stock.enabled"
-  [class.negative]="stock.currentPrice < stock.dailyLow && stock.enabled"
+  [class.positive]="stock.enabled && stock.currentPrice >= stock.dailyLow"
+  [class.negative]="stock.enabled && stock.currentPrice < stock.dailyLow"
+  role="group"
 >
-  <div class="header">
-    <div class="symbol">{{ stock.symbol }}</div>
-    <label class="switch">
+  <div class="body">
+    <div class="name">{{ stock.name }}</div>
+    <div class="price">
+      {{ stock.currentPrice | currency : "USD" : "symbol" : "1.2-2" }}
+    </div>
+
+    <div class="daily p-1" aria-label="Daily High and Low Prices">
+      <div>
+        High: {{ stock.dailyHigh | currency : "USD" : "symbol" : "1.2-2" }}
+      </div>
+      <div>
+        Low: {{ stock.dailyLow | currency : "USD" : "symbol" : "1.2-2" }}
+      </div>
+    </div>
+
+    @if (!isMobile) {
+    <div class="week p-1" aria-label="52 Week High and Low Prices">
+      <div>
+        52W High: {{ stock.week52High | currency : "USD" : "symbol" : "1.2-2" }}
+      </div>
+      <div>
+        52W Low: {{ stock.week52Low | currency : "USD" : "symbol" : "1.2-2" }}
+      </div>
+    </div>
+    }
+  </div>
+  <div class="header mt-1">
+    <label class="switch" role="switch" tabindex="0">
       <input type="checkbox" [checked]="stock.enabled" (change)="onToggle()" />
       <span class="slider"></span>
     </label>
-  </div>
-
-  <div class="body">
-    <div class="name">{{ stock.name }}</div>
-    <div class="price">{{ stock.currentPrice | currency }}</div>
-    <div class="daily m-1 p-1">
-      <div>High: {{ stock.dailyHigh | currency }}</div>
-      <div>Low: {{ stock.dailyLow | currency }}</div>
-    </div>
-
-    <ng-container *ngIf="!isMobile">
-      <div class="week m-1 p-1">
-        <div>52W High: {{ stock.week52High | currency }}</div>
-        <div>52W Low: {{ stock.week52Low | currency }}</div>
-      </div>
-    </ng-container>
   </div>
 </div>

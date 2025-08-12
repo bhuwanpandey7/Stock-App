@@ -60,9 +60,9 @@ export class StockPriceService {
     return stocks;
   }
 
-  toggleStock(symbol: string, enabled: boolean) {
+  toggleStock(name: string, enabled: boolean) {
     const updated = this.stocksSubject.value.map((stock) =>
-      stock.symbol === symbol ? { ...stock, enabled } : stock
+      stock.name === name ? { ...stock, enabled } : stock
     );
     this.stocksSubject.next(updated);
   }

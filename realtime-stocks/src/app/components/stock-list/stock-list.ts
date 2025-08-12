@@ -26,6 +26,6 @@ export class StockListComponent implements OnInit {
   }
 
   toggle(stock: Stock) {
-    this.stockService.toggleStock(stock.symbol, !stock.enabled);
+    this.stockService.toggleStock(stock.name, !stock.enabled);
   }
 }
