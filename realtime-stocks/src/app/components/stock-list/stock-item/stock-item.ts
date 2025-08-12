@@ -12,6 +12,7 @@ import { StockCurrencyPipe } from '../../../pipes/stock-currency-pipe';
 export class StockItemComponent {
   @Input() stock!: Stock;
   @Input() isMobile = false;
+  @Input() currencyType!: string;
   @Output() toggleStock = new EventEmitter<Stock>();
 
   onToggle() {

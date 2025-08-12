@@ -14,6 +14,7 @@ import { StockItem } from '../../types/stock.type';
 })
 export class StockListComponent implements OnInit {
   stocks: Stock[] = [];
+  currencyType: string =  'USD';
   isMobile = window.innerWidth <= 768;
   isConnected = false;
 
@@ -31,6 +32,6 @@ export class StockListComponent implements OnInit {
   }
 
   toggle(stock: Stock) {
-    this.stockService.toggleStock(stock.name, !stock.enabled);
+    this.stockService.toggleStock({name: stock.name, enabled: !stock.enabled});
   }
 }
