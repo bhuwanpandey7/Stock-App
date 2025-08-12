@@ -1,10 +1,20 @@
+<section class="stockList">
+  <div class="stockList__Header">
+    <header>
+      Realtime Stock Updates
+    </header>
+    @if (isConnected) {
+    <div class="connection-indicator m-1" title="Real-time updates active"></div>
+    }
+  </div>
 
-<div class="stock-grid">
-  @for (stock of stocks;track stock.name) {
-  <app-stock-item
-    [stock]="stock"
-    [isMobile]="isMobile"
-    (toggleStock)="toggle($event)"
-  ></app-stock-item>
-  }
-</div>
+  <div class="stockList__stock-item">
+    @for (stock of stocks;track stock.name) {
+    <app-stock-item
+      [stock]="stock"
+      [isMobile]="isMobile"
+      (toggleStock)="toggle($event)"
+    ></app-stock-item>
+    }
+  </div>
+</section>

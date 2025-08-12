@@ -7,29 +7,38 @@
 >
   <div class="body">
     <div class="name">{{ stock.name }}</div>
+    <div class="name">{{ stock.symbol }}</div>
+
     <div class="price">
-      {{ stock.currentPrice | currency : "USD" : "symbol" : "1.2-2" }}
+      {{ stock.currentPrice | stockCurrency }}
     </div>
 
-    <div class="daily p-1" aria-label="Daily High and Low Prices">
-      <div>
-        High: {{ stock.dailyHigh | currency : "USD" : "symbol" : "1.2-2" }}
+    <div class="daily-week-container" aria-label="Stock price details">
+      <div class="daily p-1" aria-label="Daily High and Low Prices">
+        <div class="stat">
+          <div class="label">Daily High Price:</div>
+          <div class="value">{{ stock.dailyHigh | stockCurrency }}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Daily Low Price:</div>
+          <div class="value">{{ stock.dailyLow | stockCurrency }}</div>
+        </div>
       </div>
-      <div>
-        Low: {{ stock.dailyLow | currency : "USD" : "symbol" : "1.2-2" }}
-      </div>
+      @if (!isMobile) {
+      <ng-container>
+        <div class="week p-1" aria-label="52 Week High and Low Prices">
+          <div class="stat">
+            <div class="label">52W High Price:</div>
+            <div class="value">{{ stock.week52High | stockCurrency }}</div>
+          </div>
+          <div class="stat">
+            <div class="label">52W Low Price:</div>
+            <div class="value">{{ stock.week52Low | stockCurrency }}</div>
+          </div>
+        </div>
+      </ng-container>
+      }
     </div>
-
-    @if (!isMobile) {
-    <div class="week p-1" aria-label="52 Week High and Low Prices">
-      <div>
-        52W High: {{ stock.week52High | currency : "USD" : "symbol" : "1.2-2" }}
-      </div>
-      <div>
-        52W Low: {{ stock.week52Low | currency : "USD" : "symbol" : "1.2-2" }}
-      </div>
-    </div>
-    }
   </div>
   <div class="header mt-1">
     <label class="switch" role="switch" tabindex="0">

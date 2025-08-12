@@ -1,53 +1,44 @@
-/*
-Adapter Service to transform API response to the shape of the Stock Item Interface
-*/
-
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, interval, of } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { io, Socket } from 'socket.io-client';
 import { Stock } from '../models/stock.interface';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class StockPriceService {
+@Injectable()
+export class StockPriceService implements OnDestroy {
   private stocksSubject = new BehaviorSubject<Stock[]>([]);
-  private apiUrl = 'http://localhost:3000/api/stocks';
+  stocks$ = this.stocksSubject.asObservable();
+  private socket!: Socket;
+  private connectionStatusSubject = new BehaviorSubject<boolean>(false);
+  connectionStatus$ = this.connectionStatusSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.fetchStocks();
-    interval(60000).subscribe(() => this.fetchStocks());
+  constructor() {
+    this.connectSocket();
   }
 
-  getStocks(): Observable<Stock[]> {
-    return this.stocksSubject.asObservable();
+  private connectSocket() {
+    this.socket = io('http://localhost:3000');
+
+    this.socket.on('connect', () => {
+      this.connectionStatusSubject.next(true);
+    });
+
+    this.socket.on('stockUpdate', (response: any) => {
+      const stocks = this.transformStocksRealTimeData(response);
+      this.stocksSubject.next(stocks);
+    });
+
+    this.socket.on('disconnect', () => {
+      this.connectionStatusSubject.next(false);
+    });
+
+    this.socket.on('error', (err: any) => {
+      console.error('WebSocket error:', err);
+      this.stocksSubject.next([]);
+    });
   }
 
-  private fetchStocks(): void {
-    let stocks: Stock[] = [];
-    this.http
-      .get<any>(this.apiUrl)
-      .pipe(
-        tap((response) => {
-          if (response?.quoteResponse?.result?.length) {
-            stocks = this.transformStocksRealTimeData(stocks, response);
-          } else if (!stocks.length) {
-            stocks = [];
-          }
-          this.stocksSubject.next(stocks);
-        }),
-        catchError((error) => {
-          stocks = [];
-          this.stocksSubject.next(stocks);
-          return of(stocks);
-        })
-      )
-      .subscribe();
-  }
-
-  private transformStocksRealTimeData(stocks: Stock[], response: any) {
-    stocks = response.quoteResponse.result.map((item: any) => ({
+  private transformStocksRealTimeData(response: any): Stock[] {
+    return response?.quoteResponse?.result?.map((item: any) => ({
       symbol: item.symbol,
       name: item.shortName || item.longName || item.symbol,
       currentPrice: item.regularMarketPrice,
@@ -57,7 +48,6 @@ export class StockPriceService {
       week52Low: item.fiftyTwoWeekLow,
       enabled: true,
     }));
-    return stocks;
   }
 
   toggleStock(name: string, enabled: boolean) {
@@ -65,5 +55,11 @@ export class StockPriceService {
       stock.name === name ? { ...stock, enabled } : stock
     );
     this.stocksSubject.next(updated);
+  }
+
+  ngOnDestroy() {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
   }
 }

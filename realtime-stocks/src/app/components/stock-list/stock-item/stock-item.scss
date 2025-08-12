@@ -19,7 +19,7 @@
   transition: transform 0.2s, box-shadow 0.2s;
 
   &.positive {
-    background: linear-gradient(145deg, #399961, #13d263);
+    background: linear-gradient( 145deg, #389334, #84b981);
   }
   &.negative {
     background: linear-gradient(145deg, #c0392b, #e74c3c);
@@ -51,8 +51,8 @@
     .name {
       font-size: 1rem;
       margin-bottom: 0.6rem;
-      color: rgb(12, 5, 98);
-      font-weight: 500;
+      color: #111037;
+      font-weight: bold;
     }
 
     .price {
@@ -62,17 +62,35 @@
       color: #45130e;
     }
 
-    /* Each label/value pair on its own line */
-    .stat {
-      font-size: 0.95rem;
-      margin-bottom: 0.4rem;
+    .daily-week-container {
       display: flex;
       justify-content: space-between;
-
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .daily, .week {
+      flex: 1 1 45%;
+      min-width: 120px;
+    }
+    
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+      color: #333;
+    
       .label {
         font-weight: bold;
+        font-size: small;
+      }
+      .value {
+        font-weight: normal;
+        color: #111037;
       }
     }
+    
   }
 }
 
