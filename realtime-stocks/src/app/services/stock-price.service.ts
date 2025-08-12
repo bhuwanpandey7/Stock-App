@@ -57,6 +57,7 @@ export class StockPriceService implements OnDestroy {
         symbol: item.symbol,
         name: item.shortName || item.longName || item.symbol,
         currentPrice: item.regularMarketPrice,
+        regularMarketPreviousClose: item.regularMarketPreviousClose,
         dailyHigh: item.regularMarketDayHigh,
         dailyLow: item.regularMarketDayLow,
         week52High: item.fiftyTwoWeekHigh,

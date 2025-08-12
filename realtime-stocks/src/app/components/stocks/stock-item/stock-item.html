@@ -1,15 +1,18 @@
 <div
   class="stock-card"
   [class.disabled]="!stock.enabled"
-  [class.positive]="stock.enabled && stock.currentPrice >= stock.dailyLow"
-  [class.negative]="stock.enabled && stock.currentPrice < stock.dailyLow"
+  [class.positive]="
+    stock.enabled && stock.currentPrice >= stock.regularMarketPreviousClose
+  "
+  [class.negative]="
+    stock.enabled && stock.currentPrice < stock.regularMarketPreviousClose
+  "
   role="group"
 >
   <div class="body">
     <div class="name">{{ stock.symbol }}</div>
-
     <div class="price">
-      {{ stock.currentPrice | stockCurrency:currencyType }}
+      {{ stock.currentPrice | stockCurrency : currencyType }}
     </div>
 
     <div class="daily-week-container" aria-label="Stock price details">
@@ -17,13 +20,13 @@
         <div class="stat">
           <div class="label">Daily High Price:</div>
           <div class="value">
-            {{ stock.dailyHigh | stockCurrency:currencyType }}
+            {{ stock.dailyHigh | stockCurrency : currencyType }}
           </div>
         </div>
         <div class="stat">
           <div class="label">Daily Low Price:</div>
           <div class="value">
-            {{ stock.dailyLow | stockCurrency:currencyType }}
+            {{ stock.dailyLow | stockCurrency : currencyType }}
           </div>
         </div>
       </div>
@@ -33,13 +36,13 @@
           <div class="stat">
             <div class="label">52W High Price:</div>
             <div class="value">
-              {{ stock.week52High | stockCurrency:currencyType }}
+              {{ stock.week52High | stockCurrency : currencyType }}
             </div>
           </div>
           <div class="stat">
             <div class="label">52W Low Price:</div>
             <div class="value">
-              {{ stock.week52Low | stockCurrency:currencyType }}
+              {{ stock.week52Low | stockCurrency : currencyType }}
             </div>
           </div>
         </div>
