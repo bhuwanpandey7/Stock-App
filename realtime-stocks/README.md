@@ -22,11 +22,13 @@ This is a Real time stock Angular application that displays a list of stocks wit
    git clone (https://github.com/bhuwanpandey7/Stock-App.git)
    cd realtime-stocks
 
-   Install dependencies:
-   navigate to src/backend and run npm install for server side dependencies
-   run npm install at root of project for client side dependencies
+Install dependencies:
+ - npm run install:all  (will install dependencies for both backend server and front end app)
 
- npm run start (will run both backend and front end app concurrently)
+ npm run start (will run both backend and front end app parallely)
+ - npm run start
+
+  # scripts #
  -  "start": "npm-run-all --parallel backend frontend",
  -  "backend": "node src/backend/server.js",
  -  "frontend": "ng serve --proxy-config proxy.conf.json",
