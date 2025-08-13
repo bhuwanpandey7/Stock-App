@@ -7,7 +7,6 @@
   [class.negative]="
     stock.enabled && stock.currentPrice < stock.regularMarketPreviousClose
   "
-  role="group"
 >
   <div class="body">
     <div class="name">{{ stock.symbol }}</div>
@@ -30,23 +29,22 @@
           </div>
         </div>
       </div>
+
       @if (!isMobile) {
-      <ng-container>
-        <div class="week p-1" aria-label="52 Week High and Low Prices">
-          <div class="stat">
-            <div class="label">52W High Price:</div>
-            <div class="value">
-              {{ stock.week52High | stockCurrency : currencyType }}
-            </div>
-          </div>
-          <div class="stat">
-            <div class="label">52W Low Price:</div>
-            <div class="value">
-              {{ stock.week52Low | stockCurrency : currencyType }}
-            </div>
+      <div class="week p-1" aria-label="52 Week High and Low Prices">
+        <div class="stat">
+          <div class="label">52W High Price:</div>
+          <div class="value">
+            {{ stock.week52High | stockCurrency : currencyType }}
           </div>
         </div>
-      </ng-container>
+        <div class="stat">
+          <div class="label">52W Low Price:</div>
+          <div class="value">
+            {{ stock.week52Low | stockCurrency : currencyType }}
+          </div>
+        </div>
+      </div>
       }
     </div>
   </div>

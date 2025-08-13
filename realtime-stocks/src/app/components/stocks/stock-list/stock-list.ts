@@ -3,7 +3,6 @@ import { Stock } from '../../../models/stock.interface';
 import { StockPriceService } from '../../../services/stock-price.service';
 import { CommonModule } from '@angular/common';
 import { StockItemComponent } from '../stock-item/stock-item';
-import { StockItem } from '../../../types/stock.type';
 
 @Component({
   selector: 'app-stock-list',

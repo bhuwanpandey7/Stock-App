@@ -16,44 +16,33 @@ export class StockPriceService implements OnDestroy {
   connectionStatus$ = this.connectionStatusSubject.asObservable();
 
   constructor() {
-    this.connectSocket();
+    this.initSocket();
   }
 
-  private connectSocket(): void {
+  private initSocket(): void {
     this.socket = io('http://localhost:3000');
 
-    this.socket.on('connect', () => {
-      this.connectionStatusSubject.next(true);
-    });
+    this.socket.on('connect', () => this.connectionStatusSubject.next(true));
+    this.socket.on('disconnect', () =>
+      this.connectionStatusSubject.next(false)
+    );
+    this.socket.on('error', () => this.stocksSubject.next([]));
 
-    this.socket.on('stockUpdate', (response: any) => {
-      const stocks = this.transformStocksRealTimeData(response);
-      const merged = stocks.map((stock) => {
-        if (this.manualOff.has(stock.name)) {
-          const last = this.stocksSubject.value.find(
-            (s) => s.name === stock.name
-          );
-          return last
-            ? { ...last, enabled: false }
-            : { ...stock, enabled: false };
-        }
-        return stock;
-      });
-      this.stocksSubject.next(merged);
-    });
-
-    this.socket.on('disconnect', () => {
-      this.connectionStatusSubject.next(false);
-    });
-
-    this.socket.on('error', (err: any) => {
-      this.stocksSubject.next([]);
+    this.socket.on('stockUpdate', (res) => {
+      const stocks = this.mergeManualOff(StockPriceService.mapResponse(res));
+      this.stocksSubject.next(stocks);
     });
   }
 
-  private transformStocksRealTimeData(response: any): Stock[] {
+  private mergeManualOff(stocks: Stock[]): Stock[] {
+    return stocks.map((stock) =>
+      this.manualOff.has(stock.name) ? { ...stock, enabled: false } : stock
+    );
+  }
+
+  private static mapResponse(response: any): Stock[] {
     return (
-      (response?.quoteResponse?.result?.map((item: any) => ({
+      response?.quoteResponse?.result?.map((item: any) => ({
         symbol: item.symbol,
         name: item.shortName || item.longName || item.symbol,
         currentPrice: item.regularMarketPrice,
@@ -63,22 +52,19 @@ export class StockPriceService implements OnDestroy {
         week52High: item.fiftyTwoWeekHigh,
         week52Low: item.fiftyTwoWeekLow,
         enabled: true,
-      })) as Stock[]) || []
+      })) ?? []
     );
   }
 
-  toggleStock(stockItem: StockItem): void {
-    const { name, enabled } = stockItem;
-    if (!enabled) {
-      this.manualOff.add(name);
-    } else {
-      this.manualOff.delete(name);
-    }
+  toggleStock({ name, enabled }: StockItem): void {
+    enabled ? this.manualOff.delete(name) : this.manualOff.add(name);
     this.socket.emit('toggleStock', { name, enabled });
-    const updated = this.stocksSubject.value.map((stock) =>
-      stock.name === name ? { ...stock, enabled } : stock
+
+    this.stocksSubject.next(
+      this.stocksSubject.value.map((stock) =>
+        stock.name === name ? { ...stock, enabled } : stock
+      )
     );
-    this.stocksSubject.next(updated);
   }
 
   ngOnDestroy(): void {

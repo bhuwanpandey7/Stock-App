@@ -1,5 +1,3 @@
-import { io } from 'socket.io-client';
-
 // Create a manual mock socket object
 class MockSocket {
   events: { [key: string]: Function[] } = {};

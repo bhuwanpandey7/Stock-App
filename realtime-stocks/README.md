@@ -8,6 +8,35 @@ This is a Real time stock Angular application that displays a list of stocks wit
 
 ---
 
+## Usage
+
+### Prerequisites
+
+- Node.js and npm installed
+- Angular CLI installed globally (`npm install -g @angular/cli`)
+
+### Installation
+
+1. Clone the repository:
+
+   git clone (https://github.com/bhuwanpandey7/Stock-App.git)
+   cd realtime-stocks
+
+   Install dependencies:
+   navigate to src/backend and run npm install for server side dependencies
+   run npm install at root of project for client side dependencies
+
+ npm run start (will run both backend and front end app concurrently)
+ -  "start": "npm-run-all --parallel backend frontend",
+ -  "backend": "node src/backend/server.js",
+ -  "frontend": "ng serve --proxy-config proxy.conf.json",
+
+Run the development server:  
+ Open your browser at http://localhost:4200 to see the app. 
+   (Note: Added http://localhost:4200 to allowed CORS origin change or add if running on any other port)
+
+---
+
 ## Features
 
 - Fetches stock data from a yahoo finance using web sockets.
@@ -66,29 +95,3 @@ src/
 - Emits toggle events back to parent component.
 
 ---
-
-## Usage
-
-### Prerequisites
-
-- Node.js and npm installed
-- Angular CLI installed globally (`npm install -g @angular/cli`)
-
-### Installation
-
-1. Clone the repository:
-
-   git clone (https://github.com/bhuwanpandey7/Stock-App.git)
-   cd realtime-stocks
-
-   Install dependencies:
-   navigate to src/backend and run install for server side dependencies
-   run npm install at root of project for client side dependencies
-
- npm run start (will run both backend and front end app concurrently)
- -  "start": "npm-run-all --parallel backend frontend",
- -  "backend": "node src/backend/server.js",
- -  "frontend": "ng serve --proxy-config proxy.conf.json",
-
-Run the development server:  
- Open your browser at http://localhost:4200 to see the app.

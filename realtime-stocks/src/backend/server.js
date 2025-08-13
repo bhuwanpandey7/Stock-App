@@ -14,7 +14,7 @@ const io = new Server(server, {
 });
 
 app.use(cors());
-const symbols = ["AAPL", "GOOGL", "MSFT", "TSLA"];
+const symbols = ["AAPL", "GOOGL", "MSFT", "TSLA"]; // Adding a stock symbol here will reflect on UI without any other change
 
 let stockCache = {};
 const clientDisabledStocks = {};
@@ -32,12 +32,12 @@ io.on("connection", (socket) => {
     try {
       const results = await yahooFinance.quote(symbols);
       results.forEach((stock) => {
-        const key = stock.shortName || stock.symbol;
+        const key = stock.symbol;
         stockCache[key] = stock;
       });
       const disabledSet = clientDisabledStocks[socket.id];
       const finalData = Object.values(stockCache).map((stock) => {
-        const key = stock.shortName || stock.symbol;
+        const key = stock.symbol;
         if (disabledSet.has(key)) {
           return { ...stockCache[key], _frozen: true };
         }
@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
     }
   };
   sendStockData();
-  const intervalId = setInterval(sendStockData, 6000);
+  const intervalId = setInterval(sendStockData, 5000);
   socket.on("disconnect", () => {
     clearInterval(intervalId);
     delete clientDisabledStocks[socket.id];
