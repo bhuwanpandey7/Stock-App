@@ -9,7 +9,19 @@
   "
 >
   <div class="body">
-    <div class="symbol">{{ stock.symbol }}</div>
+    <div class="d-flex justify-content-between">
+      <div class="symbol">{{ stock.symbol }}</div>
+      <div class="header">
+        <label class="switch" role="switch" tabindex="0">
+          <input
+            type="checkbox"
+            [checked]="stock.enabled"
+            (change)="onToggle()"
+          />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
     <div class="name">{{ stock.name }}</div>
     <div class="price">
       {{ stock.currentPrice | stockCurrency : currencyType }}
@@ -18,13 +30,13 @@
     <div class="daily-week-container" aria-label="Stock price details">
       <div class="daily p-1" aria-label="Daily High and Low Prices">
         <div class="stat">
-          <div class="label">Daily High Price:</div>
+          <div class="label">Daily High</div>
           <div class="value">
             {{ stock.dailyHigh | stockCurrency : currencyType }}
           </div>
         </div>
         <div class="stat">
-          <div class="label">Daily Low Price:</div>
+          <div class="label">Daily Low</div>
           <div class="value">
             {{ stock.dailyLow | stockCurrency : currencyType }}
           </div>
@@ -34,13 +46,13 @@
       @if (!isMobile) {
       <div class="week p-1" aria-label="52 Week High and Low Prices">
         <div class="stat">
-          <div class="label">52W High Price:</div>
+          <div class="label">52W High</div>
           <div class="value">
             {{ stock.week52High | stockCurrency : currencyType }}
           </div>
         </div>
         <div class="stat">
-          <div class="label">52W Low Price:</div>
+          <div class="label">52W Low</div>
           <div class="value">
             {{ stock.week52Low | stockCurrency : currencyType }}
           </div>
@@ -48,11 +60,5 @@
       </div>
       }
     </div>
-  </div>
-  <div class="header mt-1">
-    <label class="switch" role="switch" tabindex="0">
-      <input type="checkbox" [checked]="stock.enabled" (change)="onToggle()" />
-      <span class="slider"></span>
-    </label>
   </div>
 </div>
