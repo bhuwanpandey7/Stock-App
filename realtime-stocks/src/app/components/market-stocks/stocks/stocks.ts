@@ -14,14 +14,14 @@ export class StocksComponent {
   isNavCollapsed = true;
   // create separate enum
   markets = [
-    'US',
-    'Europe',
-    'Asia',
-    'Australia',
-    'Canada',
-    'South America',
-    'Africa',
-    'Middle East',
+    { name: 'US', flag: '🇺🇸' },
+    { name: 'Europe', flag: '🇪🇺' },
+    { name: 'Asia', flag: '🌏' },
+    { name: 'Australia', flag: '🇦🇺' },
+    { name: 'Canada', flag: '🇨🇦' },
+    { name: 'South America', flag: '🌎' },
+    { name: 'Africa', flag: '🌍' },
+    { name: 'Middle East', flag: '🕌' },
   ];
   selectedMarket = 'US';
   // isSideNavOpen = false;

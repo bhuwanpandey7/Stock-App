@@ -22,15 +22,15 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="marketNav">
-          <ul class="navbar-nav ms-auto flex-row">
+          <ul class="navbar-nav ms-auto flex-row flex-lg-row">
             <li class="nav-item" *ngFor="let market of markets">
               <a
-                class="nav-link px-3 py-2 fw-semibold"
-                [class.active]="selectedMarket === market"
-                (click)="selectMarket(market)"
+                class="nav-link px-3 py-2 fw-semibold d-flex align-items-center"
+                [class.active]="selectedMarket === market.name"
+                (click)="selectMarket(market.name)"
                 href="javascript:void(0)"
               >
-                {{ market }}
+                <span class="me-2">{{ market.flag }}</span> {{ market.name }}
               </a>
             </li>
           </ul>
