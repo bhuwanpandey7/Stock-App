@@ -40,19 +40,25 @@ export class StockPriceService implements OnDestroy {
     );
   }
 
+  selectMarket(market: string) {
+    this.socket.emit('selectMarket', market);
+  }
+
   private static mapResponse(response: any): Stock[] {
     return (
-      response?.quoteResponse?.result?.map((item: any) => ({
-        symbol: item.symbol,
-        name: item.shortName || item.longName || item.symbol,
-        currentPrice: item.regularMarketPrice,
-        regularMarketPreviousClose: item.regularMarketPreviousClose,
-        dailyHigh: item.regularMarketDayHigh,
-        dailyLow: item.regularMarketDayLow,
-        week52High: item.fiftyTwoWeekHigh,
-        week52Low: item.fiftyTwoWeekLow,
-        enabled: true,
-      })) ?? []
+      response?.quoteResponse?.result
+        ?.filter((item: any) => item !== null && item !== undefined) // ✅ filter out nulls
+        .map((item: any) => ({
+          symbol: item.symbol,
+          name: item.shortName || item.longName || item.symbol,
+          currentPrice: item.regularMarketPrice,
+          regularMarketPreviousClose: item.regularMarketPreviousClose,
+          dailyHigh: item.regularMarketDayHigh,
+          dailyLow: item.regularMarketDayLow,
+          week52High: item.fiftyTwoWeekHigh,
+          week52Low: item.fiftyTwoWeekLow,
+          enabled: true,
+        })) ?? []
     );
   }
 

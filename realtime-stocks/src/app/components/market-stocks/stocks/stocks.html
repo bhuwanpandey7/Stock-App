@@ -1,0 +1,33 @@
+<section class="stockList">
+  <div class="stockList__Header">
+    <header>Realtime Stock Updates</header>
+    <div
+      class="connection-indicator m-3"
+      title="Real-time updates active"
+    ></div>
+    <!-- Stock Market Navigation -->
+    <nav
+      class="market-nav navbar navbar-expand-lg navbar-dark bg-dark shadow-sm"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-uppercase" href="#">📈 Markets</a>
+
+        <ul class="nav nav-pills ms-auto">
+          <li class="nav-item" *ngFor="let market of markets">
+            <a
+              class="nav-link px-4 py-2 fw-semibold"
+              [class.active]="selectedMarket === market"
+              (click)="selectMarket(market)"
+              href="javascript:void(0)"
+            >
+              {{ market }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</section>
+<div class="mt-3">
+  <app-stock-list [market]="selectedMarket"></app-stock-list>
+</div>
