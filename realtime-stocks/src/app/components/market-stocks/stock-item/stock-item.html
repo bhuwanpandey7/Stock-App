@@ -9,7 +9,8 @@
   "
 >
   <div class="body">
-    <div class="name">{{ stock.symbol }}</div>
+    <div class="symbol">{{ stock.symbol }}</div>
+    <div class="name">{{ stock.name }}</div>
     <div class="price">
       {{ stock.currentPrice | stockCurrency : currencyType }}
     </div>

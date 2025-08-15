@@ -1,6 +1,6 @@
 .stockList {
   .stockList__Header {
-    background-color: #101518;
+    background-color: #1d2124;
     display: flex;
     justify-content: center;
     align-items: baseline;
@@ -12,6 +12,7 @@
     header {
       color: #ffffff;
       font-size: small;
+      justify-content: flex-start;
       font-weight: bold;
       opacity: 0.9;
     }
@@ -26,12 +27,54 @@
   }
 }
 
+// /* Side Nav Styles */
+// .side-nav {
+//   position: fixed;
+//   top: 0;
+//   right: -250px; /* hidden by default */
+//   width: 250px;
+//   height: 100%;
+//   background-color: #212529;
+//   color: white;
+//   display: flex;
+//   flex-direction: column;
+//   padding-top: 60px;
+//   transition: right 0.3s ease-in-out;
+//   z-index: 1050;
+// }
+
+// .side-nav.open {
+//   right: 0;
+// }
+
+// .side-nav-item {
+//   padding: 15px 20px;
+//   text-decoration: none;
+//   color: white;
+//   display: block;
+// }
+
+// .side-nav-item:hover {
+//   background-color: rgba(255, 255, 255, 0.1);
+// }
+
+// /* Backdrop */
+// .side-nav-backdrop {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   background-color: rgba(0, 0, 0, 0.5);
+//   z-index: 1040;
+// }
+
 .market-nav {
   .nav-link {
     color: #d1d5db;
     border-radius: 30px;
     transition: all 0.3s ease;
-    font-size: 0.95rem;
+    font-size: small;
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.15);
@@ -39,7 +82,7 @@
     }
 
     &.active {
-      background-color: #198754; /* Bootstrap success green */
+      background-color: #198754;
       color: white;
       box-shadow: 0 0 10px rgba(25, 135, 84, 0.6);
     }

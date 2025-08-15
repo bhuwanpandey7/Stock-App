@@ -1,6 +1,6 @@
 <section class="stockList">
   <div class="stockList__Header">
-    <header>Realtime Stock Updates</header>
+    <header>Realtime Stock Tracking</header>
     <div
       class="connection-indicator m-3"
       title="Real-time updates active"
@@ -37,6 +37,22 @@
         </div>
       </div>
     </nav>
+    <!-- <div
+      class="side-nav"
+      [class.open]="isSideNavOpen"
+      (clickOutside)="closeSideNav()"
+    >
+      <a href="#" class="side-nav-item" (click)="closeSideNav()"
+        >Market Insights</a
+      >
+      <a href="#" class="side-nav-item" (click)="closeSideNav()">Analytics</a>
+      <a href="#" class="side-nav-item" (click)="closeSideNav()">Reports</a>
+    </div>
+    <div
+      class="side-nav-backdrop"
+      *ngIf="isSideNavOpen"
+      (click)="closeSideNav()"
+    ></div> -->
   </div>
 </section>
 <div class="mt-3">
