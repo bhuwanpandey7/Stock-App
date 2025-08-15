@@ -5,25 +5,36 @@
       class="connection-indicator m-3"
       title="Real-time updates active"
     ></div>
-    <!-- Stock Market Navigation -->
     <nav
       class="market-nav navbar navbar-expand-lg navbar-dark bg-dark shadow-sm"
     >
       <div class="container-fluid">
         <a class="navbar-brand fw-bold text-uppercase" href="#">📈 Markets</a>
-
-        <ul class="nav nav-pills ms-auto">
-          <li class="nav-item" *ngFor="let market of markets">
-            <a
-              class="nav-link px-4 py-2 fw-semibold"
-              [class.active]="selectedMarket === market"
-              (click)="selectMarket(market)"
-              href="javascript:void(0)"
-            >
-              {{ market }}
-            </a>
-          </li>
-        </ul>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#marketNav"
+          aria-controls="marketNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="marketNav">
+          <ul class="navbar-nav ms-auto flex-row">
+            <li class="nav-item" *ngFor="let market of markets">
+              <a
+                class="nav-link px-3 py-2 fw-semibold"
+                [class.active]="selectedMarket === market"
+                (click)="selectMarket(market)"
+                href="javascript:void(0)"
+              >
+                {{ market }}
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   </div>
