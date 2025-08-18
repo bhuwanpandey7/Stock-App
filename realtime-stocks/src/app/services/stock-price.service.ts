@@ -47,7 +47,7 @@ export class StockPriceService implements OnDestroy {
   private static mapResponse(response: any): Stock[] {
     return (
       response?.quoteResponse?.result
-        ?.filter((item: any) => item !== null && item !== undefined) // ✅ filter out nulls
+        ?.filter((item: any) => item !== null && item !== undefined)
         .map((item: any) => ({
           symbol: item.symbol,
           name: item.shortName || item.longName || item.symbol,

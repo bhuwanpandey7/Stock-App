@@ -19,7 +19,6 @@ export class StocksComponent {
     { name: 'Asia', flag: '🌏' },
     { name: 'Australia', flag: '🇦🇺' },
     { name: 'Canada', flag: '🇨🇦' },
-    { name: 'South America', flag: '🌎' },
     { name: 'Africa', flag: '🌍' },
     { name: 'Middle East', flag: '🕌' },
   ];

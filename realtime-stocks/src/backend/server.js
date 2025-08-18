@@ -27,59 +27,65 @@ const marketSymbols = {
     "V",
   ],
   Europe: [
-    "AIR.PA", // Airbus - Paris
-    "RDSA.AS", // Shell - Amsterdam
-    "BAS.DE", // BASF - Germany
-    "SIE.DE", // Siemens - Germany
-    "SAN.PA", // Sanofi - France
-    "BMW.DE", // BMW - Germany
-    "NESN.SW", // Nestlé - Switzerland
-    "NOVN.SW", // Novartis - Switzerland
+    "AIR.PA",
+    "RDSA.AS",
+    "BAS.DE",
+    "SIE.DE",
+    "SAN.PA",
+    "BMW.DE",
+    "NESN.SW",
+    "NOVN.SW",
   ],
   Asia: [
-    "7203.T", // Toyota - Tokyo
-    "9984.T", // SoftBank - Tokyo
-    "0005.HK", // HSBC - Hong Kong
-    "2318.HK", // Ping An - Hong Kong
-    "6758.T", // Sony - Tokyo
-    "6861.T", // Keyence - Tokyo
-    "0700.HK", // Tencent - Hong Kong
+    "7203.T",
+    "9984.T",
+    "0005.HK",
+    "2318.HK",
+    "6758.T",
+    "6861.T",
+    "0700.HK",
   ],
-  Australia: [
-    "BHP.AX", // BHP Group
-    "CBA.AX", // Commonwealth Bank
-    "WBC.AX", // Westpac
-    "TLS.AX", // Telstra
-    "WES.AX", // Wesfarmers
-    "CSL.AX", // CSL Limited
-  ],
-  Canada: [
-    "RY.TO", // Royal Bank of Canada
-    "TD.TO", // Toronto-Dominion Bank
-    "BNS.TO", // Bank of Nova Scotia
-    "ENB.TO", // Enbridge
-    "CNQ.TO", // Canadian Natural Resources
-  ],
-  MiddleEast: [
-    "ARAMCO.SR", // Saudi Aramco - Saudi Stock Exchange
-    "SABIC.SR", // SABIC
-    "EMAAR.DU", // Emaar Properties - Dubai
-    "DPW.DU", // Dubai Ports World
+  Australia: ["BHP.AX", "CBA.AX", "WBC.AX", "TLS.AX", "WES.AX", "CSL.AX"],
+  Canada: ["RY.TO", "TD.TO", "BNS.TO", "ENB.TO", "CNQ.TO"],
+  MiddleEast: ["ARAMCO.SR", "SABIC.SR", "EMAAR.DU", "DPW.DU"],
+  Africa: [
+    // South Africa (JSE)
+    "PRX",
+    "BHG",
+    "BTI",
+    "NPN",
+    "CPI",
+    "FSR",
+    "SBK",
+    "MTN",
+    // Egypt
+    "EGX30",
+    // Ghana
+    "GSE Composite",
+    // BRVM West Africa
+    "ETIT",
+    "SNTS",
+    "PALC",
+    "SGBC",
+    "UNXC",
   ],
 };
 
-const stockCache = {};
-const clientDisabledStocks = {};
-const clientMarket = {};
+// Per-client state
+const stockCache = {}; // last known stock data per client
+const clientDisabledStocks = {}; // disabled stocks per client
+const clientMarket = {}; // selected market per client
 
 io.on("connection", (socket) => {
+  stockCache[socket.id] = {};
   clientDisabledStocks[socket.id] = new Set();
   clientMarket[socket.id] = "US";
 
   socket.on("selectMarket", (market) => {
     if (marketSymbols[market]) {
       clientMarket[socket.id] = market;
-      sendStockData();
+      stockCache[socket.id] = {}; // reset cache when switching
+      sendStockData(socket);
     }
   });
 
@@ -91,39 +97,54 @@ io.on("connection", (socket) => {
     }
   });
 
-  const sendStockData = async () => {
+  const sendStockData = async (sock = socket) => {
+    const market = clientMarket[sock.id];
+    const symbols = marketSymbols[market] || [];
+    const cache = stockCache[sock.id];
+    const disabledSet = clientDisabledStocks[sock.id];
+
     try {
-      const market = clientMarket[socket.id];
-      const symbols = marketSymbols[market] || [];
+      // Fetch latest from Yahoo
+      const results = await yahooFinance.quote(symbols);
 
-      const results = (await yahooFinance.quote(symbols)).filter(
-        (r) => r !== null
-      );
+      // Update cache ONLY for enabled stocks
       results.forEach((stock) => {
-        stockCache[stock.symbol] = stock;
-      });
-
-      const disabledSet = clientDisabledStocks[socket.id];
-      const finalData = symbols.map((symbol) => {
-        if (disabledSet.has(symbol)) {
-          return { ...stockCache[symbol], _frozen: true };
+        if (!stock) return;
+        const symbol = stock.symbol;
+        if (!disabledSet.has(symbol)) {
+          cache[symbol] = stock;
         }
-        return stockCache[symbol];
       });
 
-      socket.emit("stockUpdate", {
+      // Build final dataset
+      const finalData = symbols
+        .map((symbol) => {
+          const stock = cache[symbol];
+          if (!stock) return null;
+
+          if (disabledSet.has(symbol)) {
+            // Frozen: return last known with frozen flag
+            return { ...stock, _frozen: true };
+          }
+          return stock;
+        })
+        .filter(Boolean);
+
+      sock.emit("stockUpdate", {
         quoteResponse: { result: finalData },
       });
     } catch (error) {
-      socket.emit("error", "Failed to fetch stock data");
+      sock.emit("error", "Failed to fetch stock data");
     }
   };
 
+  // Send immediately + every 5s
   sendStockData();
-  const intervalId = setInterval(sendStockData, 5000);
+  const intervalId = setInterval(() => sendStockData(), 5000);
 
   socket.on("disconnect", () => {
     clearInterval(intervalId);
+    delete stockCache[socket.id];
     delete clientDisabledStocks[socket.id];
     delete clientMarket[socket.id];
   });
